@@ -4,6 +4,8 @@ Complementary shaders by EminGT, based on BSL shaders by Capt Tatsu, with SSPT a
 
 This project is currently very experimental, errors and incompatibilities are to be expected. While bug reports are appreciated, reported bugs may not be fixed while the initial implementation is unfinished.
 
+using a PBR resource pack with texture based emissive support is recommended.
+
 
 Credits:
 

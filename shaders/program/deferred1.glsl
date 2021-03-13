@@ -234,11 +234,11 @@ void main() {
 		float depthPos2 = texture2D(colortex8, vec2(reprojectPos.x * 0.8 + 0.6, clamp(reprojectPos.y * 0.8 + 0.005, 0, 0.4))).r;
 		float depthPos3 = texture2D(colortex8, vec2(reprojectPos.x * 0.8 + 0.6, clamp(reprojectPos.y * 0.8 - 0.005, 0, 0.4))).r;
 		float depthPos4 = texture2D(colortex8, vec2(reprojectPos.x * 0.8 + 0.6, reprojectPos.y * 0.8)).r;
-		float ddepth = 20 * clamp(pow(abs(depthPos0 + depthPos1 + depthPos2 + depthPos3 - 4 * depthPos4), 0.7) -0.001, 0, 1);
+		float ddepth = 0 * clamp(pow(abs(depthPos0 + depthPos1 + depthPos2 + depthPos3 - 4 * depthPos4), 0.7) -0.001, 0, 1);
 		float oldDepthPos = texture2D(colortex8, vec2(reprojectPos.x * 0.8 + 0.6, reprojectPos.y * 0.8)).r;
-		float accumFact = pow(clamp(abs(Reproject3D(screenPos2.xyz).z - oldDepthPos) * 5000, 0, 1), 2);
+		float accumFact = pow(clamp(abs(Reproject3D(screenPos2.xyz).z - oldDepthPos) * 5000, 0, 1), 2) + 0.1 * pow(abs(4 * texCoord.x - 1), 100) + 0.1 * pow(abs(4 * texCoord.y - 1), 100);
 		sspt.a = clamp(sspt.a - accumFact, 0, 1);
-		sspt.rgb = 0.50004 * ((sspt0.rgb * sspt.a * 500 + sspt.rgb) / (sspt.a * 500 + 1) * (1 - ddepth) * (1 - pow(abs(4 * texCoord.x - 1), 100)) * (1 - pow(abs(4 * texCoord.y - 1), 100)) - vec3(0.00001));
+		sspt.rgb = 0.50004 * (sspt0.rgb * sspt.a * 100 + sspt.rgb) / (sspt.a * 100 + 1) * (1 - ddepth);
 		//color.rgb = shadowMask;
 	}
 		//sspt = vec4(vec3(ddepth), 1);

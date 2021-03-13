@@ -47,7 +47,7 @@ vec4 DiffuseGI(vec3 viewPos, vec3 normal, float dither, sampler2D colortex, samp
 		float dalbedo = pow(albedov.r - albedov.g, 2) + pow(albedov.g - albedov.b, 2) + pow(albedov.b - albedov.r, 2);
 		float brightness = length(color.rgb);
 		color.rgb *= normalize(color.rgb) * 1.72;
-		color.rgb *= pow(brightness, 0.7) + (clamp(brightness, 0, 0.7) + dalbedo) * 30 * sunStrength * shadowMask;
+		color.rgb *= pow(brightness, 0.7) + clamp((brightness + dalbedo) * 30 * sunStrength * shadowMask, 0, 3);
 		color.rgb /= 2 * pos.w + 0.2;
 		color *= color.a;
 		color *= border;
