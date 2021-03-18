@@ -228,7 +228,7 @@ void main() {
 		//ssptNormal += 0.01 * texture2D(noisetex, texCoord + 0.01 * vec2(sin(frameTimeCounter * 100), sin(frameTimeCounter * 150))).rgb;
 		vec3 ssptNoise = texture2D(noisetex, 2 * texCoord + 0.1 * vec2(sin(frameTimeCounter * dither * 2000), sin(frameTimeCounter * dither * 2500))).rgb;
 		sspt.rgb = DiffuseGI(viewPos2.xyz, ssptNormal, dither, colortex0, colortex7, colortex9, timeBrightness, ssptNoise).rgb;
-		sspt.a = clamp(sspt0.a + 0.005, 0, 1);
+		sspt.a = clamp(sspt0.a + 0.01, 0, 1);
 		float depthPos0 = texture2D(colortex8, vec2(clamp(reprojectPos.x * 0.8 + 0.6 + 0.005, 0.6, 1), reprojectPos.y * 0.8)).r;
 		float depthPos1 = texture2D(colortex8, vec2(clamp(reprojectPos.x * 0.8 + 0.6 - 0.005, 0.6, 1), reprojectPos.y * 0.8)).r;
 		float depthPos2 = texture2D(colortex8, vec2(reprojectPos.x * 0.8 + 0.6, clamp(reprojectPos.y * 0.8 + 0.005, 0, 0.4))).r;

@@ -232,6 +232,7 @@ void main(){
 		vec3 locNormal = vec3(0);
 		float brightMul0 = 0;
 		float brightMul = 0;
+		vec3 ssptb = vec3(0);
 		for(int i = -3; i < 4; i++) {
 			for(int j = -3; j < 4; j++) {
 				locNormal = texture2D(colortex6, texCoord3 + vec2((20 * i + 5 * sin(frameTimeCounter * 150)) / viewWidth, (20 * j + 5 * sin(frameTimeCounter * 100))/ viewHeight)).rgb;
@@ -240,18 +241,44 @@ void main(){
 			}
 		}
 		varNormal = 0.7 / (1.2 - pow(length(avgNormal) / sumlNormal, 2));
-		for(int i = -3; i < 4; i++) {
+		int i = 0;
+		int j = 0;
+		float k = 0;
+		while(k < 10 && i < 10) {
+			j = 0;
+			while(j <= i) {
+				for(int l = 0; l < 2; l++) {
+					for(int m = 0; m < 2; m++) {
+						for(int n = 0; n < 2; n++) {
+							newTexCoord = texCoord2 + 2 * n * vec2((2 * l - 1) * i / viewWidth, (2 * m - 1) * j / viewHeight) + (1 - n) * 2 * vec2((2 * l - 1) * (i + 1) / viewHeight, (2 * m - 1) * j / viewWidth).yx;
+							if(newTexCoord.x > 0 && newTexCoord.x < 0.5 && newTexCoord.y > 0 && newTexCoord.y < 0.5) {
+								dnormal = length(texture2D(colortex6,texCoord3).rgb - texture2D(colortex6,newTexCoord * 2).rgb);
+								dist = length(texCoord2 - newTexCoord);
+								brightMul0 = 0.00001 / pow(0.3 * ddepth + 3 * dist * dist + dnormal + 0.001, 2);
+								brightMul += brightMul0;
+								ssptb = texture2D(colortex8, newTexCoord).rgb  * brightMul0;
+								sspt.rgb += ssptb;
+								k += clamp(10 * length(ssptb) - 10, 0, 1);
+							}
+						}
+					}
+				}
+				j++;
+			}
+			i++;
+		}
+/*		for(int i = -3; i < 4; i++) {
 			for(int j = -3; j < 4; j++) {
 				newTexCoord = texCoord2 + vec2(varNormal * i / viewWidth, varNormal * j / viewHeight);
 				newTexCoord = vec2(clamp(newTexCoord.x, 0, 0.5), clamp(newTexCoord.y, 0, 0.5));
 				dist = length(texCoord2 - newTexCoord);
-				dnormal =length(texture2D(colortex6,texCoord3).rgb - texture2D(colortex6,newTexCoord * 2).rgb);
+				dnormal = length(texture2D(colortex6,texCoord3).rgb - texture2D(colortex6,newTexCoord * 2).rgb);
 				ddepth = abs(texture2D(depthtex0, texCoord3).r - texture2D(depthtex0, newTexCoord * 2).r);
-				brightMul0 = 1 / pow(0.3 * ddepth + 10 * dist * dist + 3 * dnormal + 0.001, 2);
+				brightMul0 = 1 / pow(0.3 * ddepth + 30 * dist * dist + 3 * dnormal + 0.001, 2);
 				brightMul += brightMul0;
 				sspt.rgb += texture2D(colortex8, newTexCoord).rgb * brightMul0;
 			}	
-		}
+		}*/
 		sspt.rgb /= 0.5 * brightMul;
 	}
 	//color.rgb = sspt.rgb;
