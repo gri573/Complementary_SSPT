@@ -141,9 +141,9 @@ void main(){
 	#endif
 
 	color.rgb += vl;
-	
+
 	//SSPT//
-	
+	#ifdef SSPT
 	float dist = 0;
 	float dnormal = 0;
 	float ddepth = 0;
@@ -157,9 +157,13 @@ void main(){
 		ddepth = abs(texture2D(depthtex0, texCoord).r - texture2D(depthtex0, newTexCoord * 2 - vec2(0, 1)).r);
 		sspt.rgb += texture2D(colortex8, newTexCoord).rgb * 0.0003 / (0.3 * ddepth + 20 * dist * dist + 3 * dnormal + 0.001);
 	}
-	/*DRAWBUFFERS:09*/
+	#endif
+	/*DRAWBUFFERS:0*/
 	gl_FragData[0] = color;
+	#ifdef SSPT
+	/*DRAWBUFFERS:09*/
 	gl_FragData[1] = sspt;
+	#endif
 }
 
 #endif

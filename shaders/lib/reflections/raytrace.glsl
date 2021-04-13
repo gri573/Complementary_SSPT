@@ -48,6 +48,7 @@ vec4 Raytrace(sampler2D depthtex, vec3 viewPos, vec3 normal, float dither, float
 
 	return vec4(pos, dist);
 }
+#ifdef SSPT
 vec4 Pathtrace(sampler2D depthtex, vec3 viewPos, vec3 normal, float dither, vec3 noise) {
 
 	vec3 pos = vec3(0.0);
@@ -88,3 +89,4 @@ vec4 Pathtrace(sampler2D depthtex, vec3 viewPos, vec3 normal, float dither, vec3
 
 	return vec4(pos, dist);
 }
+#endif

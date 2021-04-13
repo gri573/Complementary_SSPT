@@ -217,7 +217,7 @@ void main(){
 	#endif
 	
 	//SSPT//
-	
+	#ifdef SSPT
 	float ddepth = 0;
 	float dist = 0;
 	float dnormal = 0;
@@ -232,7 +232,7 @@ void main(){
 		vec3 locNormal = vec3(0);
 		float brightMul0 = 0;
 		float brightMul = 0;
-		vec3 ssptb = vec3(0);
+		vec4 ssptb = vec4(0);
 		for(int i = -3; i < 4; i++) {
 			for(int j = -3; j < 4; j++) {
 				locNormal = texture2D(colortex6, texCoord3 + vec2((20 * i + 5 * sin(frameTimeCounter * 150)) / viewWidth, (20 * j + 5 * sin(frameTimeCounter * 100))/ viewHeight)).rgb;
@@ -256,9 +256,10 @@ void main(){
 								dist = length(texCoord2 - newTexCoord);
 								brightMul0 = 0.00001 / pow(0.3 * ddepth + 3 * dist * dist + dnormal + 0.001, 2);
 								brightMul += brightMul0;
-								ssptb = texture2D(colortex8, newTexCoord).rgb  * brightMul0;
-								sspt.rgb += ssptb;
-								k += clamp(10 * length(ssptb) - 10, 0, 1);
+								ssptb = texture2D(colortex8, newTexCoord);
+								ssptb.rgb *= brightMul0;
+								sspt.rgb += ssptb.rgb;
+								k += (0.1 + 0.9 * ssptb.a) *  clamp(10 * length(ssptb.rgb) - 3, 0, 1);
 							}
 						}
 					}
@@ -281,11 +282,15 @@ void main(){
 		}*/
 		sspt.rgb /= 0.5 * brightMul;
 	}
+	#endif
 	//color.rgb = sspt.rgb;
-    /*DRAWBUFFERS:018*/
+    /*DRAWBUFFERS:01*/
 	gl_FragData[0] = color;
 	gl_FragData[1] = vec4(vl, 1.0);
+	#ifdef SSPT
+	/*DRAWBUFFERS:018*/
 	gl_FragData[2] = sspt;
+	#endif
 }
 
 #endif

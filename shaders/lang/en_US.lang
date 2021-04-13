@@ -177,6 +177,9 @@ option.EMISSIVE_MULTIPLIER.comment=Adjusts the brightness of emissives that are 
 option.ADVANCED_MATERIALS=Advanced Materials
 option.ADVANCED_MATERIALS.comment=Disabling this will increase FPS, but also disable the entire PBR Resource Pack support.
 
+option.SSPT=Screen Space Path Tracing
+option.SSPT.comment=Enabling will cause emissive blocks to illuminate surrounding things in their colour. §c[-]§r requires advanced materials to work!
+
 option.BLACK_OUTLINE=Black Outline
 option.BLACK_OUTLINE.comment=Enables the classic, outer black outline.
 

@@ -31,6 +31,7 @@ vec4 RoughReflection(vec3 viewPos, vec3 normal, float dither, float smoothness, 
 	
     return color;
 }
+#ifdef SSPT
 vec4 DiffuseGI(vec3 viewPos, vec3 normal, float dither, sampler2D colortex, sampler2D albedo, sampler2D shadow, float sunStrength, vec3 noise) {
     vec4 color = vec4(0.0);
 
@@ -55,3 +56,4 @@ vec4 DiffuseGI(vec3 viewPos, vec3 normal, float dither, sampler2D colortex, samp
 	//color.rgb *= 1.5 * (1.0 - 0.065 * min(length(color.rgb), 10.0));
     return color;
 }
+#endif

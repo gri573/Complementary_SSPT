@@ -43,9 +43,11 @@ uniform mat4 shadowModelView;
 uniform sampler2D colortex0;
 uniform sampler2D depthtex0;
 uniform sampler2D colortex7;
+#ifdef SSPT
 uniform sampler2D colortex8;
 const bool colortex8Clear = false;
 uniform sampler2D colortex9;
+#endif
 
 #ifdef AO
 uniform sampler2D colortex4;
@@ -59,7 +61,7 @@ uniform int moonPhase;
 uniform sampler2D colortex3;
 #endif
 
-#if (defined ADVANCED_MATERIALS && defined REFLECTION_SPECULAR) || defined SEVEN || (defined END && END_SKY > 0) || (defined NETHER && defined NETHER_SMOKE)
+#if (defined ADVANCED_MATERIALS && defined REFLECTION_SPECULAR) || defined SEVEN || (defined END && END_SKY > 0) || (defined NETHER && defined NETHER_SMOKE) || defined SSPT
 uniform vec3 cameraPosition, previousCameraPosition;
 
 uniform sampler2D colortex6;
@@ -198,7 +200,7 @@ vec3 DistortShadow(inout vec3 worldPos, float distortFactor){
 #include "/lib/outline/promoOutline.glsl"
 #endif
 
-#if defined ADVANCED_MATERIALS && defined REFLECTION_SPECULAR
+#if (defined ADVANCED_MATERIALS && defined REFLECTION_SPECULAR) || defined SSPT
 #include "/lib/util/encode.glsl"
 #include "/lib/reflections/complexFresnel.glsl"
 #include "/lib/surface/materialDeferred.glsl"
@@ -219,6 +221,7 @@ void main() {
 	vec4 viewPos2 = gbufferProjectionInverse * (screenPos2 * 2.0 - 1.0);
 	viewPos /= viewPos.w;
 	viewPos2 /= viewPos2.w;
+	#ifdef SSPT
 	vec4 sspt = vec4(0);
 	if (texCoord.x < 0.5 && texCoord.y < 0.5) {
 		vec2 reprojectPos = Reprojection(screenPos2.xyz) * 0.5;
@@ -246,6 +249,7 @@ void main() {
 	if (texCoord.x > 0.6 && texCoord.y < 0.4) {
 		sspt.r = texture2D(depthtex0, texCoord * 2.5 - vec2(1.5,0)).r;
 	}
+	#endif
 	#if defined NETHER && defined NETHER_SMOKE
 		vec3 netherNebula = DrawNetherNebula(viewPos.xyz, dither, pow((netherCol * 2.5) / NETHER_I, vec3(2.2)) * 4);
 	#endif
@@ -577,10 +581,13 @@ void main() {
 		//z *= 0.0;
 	#endif
 	
-	/*DRAWBUFFERS:058*/
+	/*DRAWBUFFERS:05*/
     gl_FragData[0] = color;
 	gl_FragData[1] = vec4(pow(color.rgb, vec3(0.125)) * 0.5, float(z < 0.999999));
+	#ifdef SSPT
+	/*DRAWBUFFERS:058*/
 	gl_FragData[2] = sspt;
+	#endif
 }
 
 #endif

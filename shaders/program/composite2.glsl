@@ -81,7 +81,7 @@ void main(){
 	#endif
 	
 	//SSPT//
-	
+	#ifdef SSPT
 	float dist = 0;
 	float dnormal = 0;
 	float ddepth = 0;
@@ -104,6 +104,7 @@ void main(){
 	
 	sspt.rgb *= vec3(0.1) * (1 - length(albedo)) + albedo;
 	color += sspt.rgb;
+	#endif
 	/*DRAWBUFFERS:0*/
 	gl_FragData[0] = vec4(color,1.0);
 }
